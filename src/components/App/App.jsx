@@ -3,8 +3,6 @@ import Searchbar from '../Searchbar/Searchbar';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import Modal from 'components/Modal/Modal';
 import css from 'components/App/App.module.css';
-import { RotatingLines } from 'react-loader-spinner';
-import Button from '../Button/Button';
 
 export class App extends React.Component {
   state = {

@@ -15,6 +15,7 @@ export default class Searchbar extends React.Component {
       alert('Search query should non be empty!');
       return;
     }
+
     this.props.onSubmit(this.state.searchValue);
     this.setState({ searchValue: '' });
   };
