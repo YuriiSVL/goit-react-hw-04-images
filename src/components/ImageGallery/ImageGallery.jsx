@@ -1,5 +1,7 @@
 import React from 'react';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
+import css from 'components/ImageGallery/ImageGallery.module.css';
+import { RotatingLines } from 'react-loader-spinner';
 import Button from 'components/Button/Button';
 
 export default class ImageGallery extends React.Component {
@@ -38,18 +40,29 @@ export default class ImageGallery extends React.Component {
   render() {
     return (
       <>
-        <ul className="gallery">
+        <ul className={css.ImageGallery}>
           {this.state.images &&
             this.state.images.map(image => (
               <ImageGalleryItem
                 key={image.id}
                 url={image.webformatURL}
                 tags={image.tags}
+                onSelect={this.props.onSelect}
+                largeUrl={image.largeImageURL}
               />
             ))}
         </ul>
-        {this.state.loading && <div>Loading...</div>}
-        {this.state.images.length > 0 && <Button fech={this.fechImages} />}
+        {this.state.loading ? (
+          <RotatingLines
+            strokeColor="grey"
+            strokeWidth="5"
+            animationDuration="0.75"
+            width="96"
+            visible={true}
+          />
+        ) : (
+          this.state.images.length > 0 && <Button fech={this.fechImages} />
+        )}
       </>
     );
   }

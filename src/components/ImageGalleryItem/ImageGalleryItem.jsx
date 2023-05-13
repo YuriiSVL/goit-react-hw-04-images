@@ -1,8 +1,9 @@
-const ImageGalleryItem = ({ url, tags }) => {
-  console.log(url);
+import css from 'components/ImageGalleryItem/ImageGalleryItem.module.css';
+
+const ImageGalleryItem = ({ url, largeUrl, tags, onSelect }) => {
   return (
-    <li className="gallery-item">
-      <img src={url} alt={tags} />
+    <li className={css.ImageGalleryItem} onClick={() => onSelect(largeUrl)}>
+      <img className={css['ImageGalleryItem-image']} src={url} alt={tags} />
     </li>
   );
 };

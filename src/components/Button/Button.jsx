@@ -1,6 +1,8 @@
+import css from 'components/Button/Button.module.css';
+
 const Button = ({ fech }) => {
   return (
-    <button className="Button" type="button" onClick={fech}>
+    <button className={css.Button} type="button" onClick={fech}>
       Load more
     </button>
   );
