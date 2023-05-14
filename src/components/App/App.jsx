@@ -1,4 +1,6 @@
 import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Searchbar from '../Searchbar/Searchbar';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import Modal from 'components/Modal/Modal';
@@ -9,6 +11,7 @@ export class App extends React.Component {
     searchQuery: '',
     showModal: false,
     selectedImage: null,
+    isOnSearch: false,
   };
 
   toggleModal = () => {
@@ -26,6 +29,10 @@ export class App extends React.Component {
     });
   };
 
+  onSearch = isOnSearch => {
+    this.setState({ isOnSearch: isOnSearch });
+  };
+
   render() {
     return (
       <div className={css.App}>
@@ -37,6 +44,7 @@ export class App extends React.Component {
           searchQuery={this.state.searchQuery}
           onSelect={this.selecteImage}
         />
+        <ToastContainer autoClose={3000} />
       </div>
     );
   }

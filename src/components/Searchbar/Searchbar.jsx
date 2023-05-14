@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React from 'react';
 import css from 'components/Searchbar/Searchbar.module.css';
 
@@ -12,7 +14,7 @@ export default class Searchbar extends React.Component {
     e.preventDefault();
 
     if (this.state.searchValue.trim() === '') {
-      alert('Search query should non be empty!');
+      toast('Search query should non be empty!');
       return;
     }
 
