@@ -33,7 +33,7 @@ export default class ImageGallery extends React.Component {
       );
       this.setState(prevState => ({
         images: [...prevState.images, ...images],
-        page: this.state.page + 1,
+        page: prevState.page + 1,
       }));
 
       this.setState({ status: 'resolved' });
@@ -55,18 +55,15 @@ export default class ImageGallery extends React.Component {
     });
     try {
       const images = await fetchImages(this.props.searchQuery);
-      this.setState(prevState => ({
+      this.setState({
         images: [...images],
-      }));
+      });
 
       this.setState({ status: 'resolved' });
       if (images.length === 0) {
-        if (this.state.images.length > 0) {
-          toast('Sorry, there is the end of collection');
-        } else
-          toast(
-            'Sorry, there are no images matching your search query. Please try again.'
-          );
+        toast(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
         this.setState({
           status: 'idle',
           page: 1,
