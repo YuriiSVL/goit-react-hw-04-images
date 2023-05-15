@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,31 +10,60 @@ import Button from 'components/Button/Button';
 import { fetchImages } from 'servises/images-api';
 
 export default class ImageGallery extends React.Component {
+  static propTypes = {
+    searchQuery: PropTypes.string,
+    onSelect: PropTypes.func,
+  };
+
   state = {
     images: [],
     page: 1,
-    // loading: false,
-    error: null,
     status: 'idle',
   };
 
-  fetchImages = async () => {
-    // this.setState({ loading: true });
+  // onLoadMore = async () => {
+  //   this.setState({ status: 'pending' });
+  //   try {
+  //     const images = await fetchImages(this.props.searchQuery, this.state.page);
+  //     this.setState(prevState => ({
+  //       images: [...prevState.images, ...images],
+  //       page: this.state.page + 1,
+  //     }));
+
+  //     this.setState({ status: 'resolved' });
+  //     if (images.length === 0) {
+  //       toast('Sorry, there is the end of collection');
+  //       this.setState({ status: 'idle' });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast(error.message);
+  //     this.setState({ status: 'error' });
+  //   }
+  // };
+
+  onSearch = async () => {
     this.setState({ status: 'pending' });
     try {
       const images = await fetchImages(this.props.searchQuery, this.state.page);
       this.setState(prevState => ({
-        images: [...prevState.images, ...images.hits],
+        images: [...prevState.images, ...images],
         page: this.state.page + 1,
       }));
-      // this.setState({ loading: false });
+
       this.setState({ status: 'resolved' });
-      if (this.state.images.length === 0) {
-        toast(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
+      if (images.length === 0) {
+        if (this.state.images.length > 0) {
+          toast('Sorry, there is the end of collection');
+        } else
+          toast(
+            'Sorry, there are no images matching your search query. Please try again.'
+          );
+        this.setState({ status: 'idle' });
       }
     } catch (error) {
+      console.log(error);
+      toast(error.message);
       this.setState({ status: 'error' });
     }
   };
@@ -67,9 +97,9 @@ export default class ImageGallery extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.searchQuery !== prevProps.searchQuery) {
-      this.setState({ loading: true });
+      this.setState({ status: 'pending' });
       this.setState({ images: [] });
-      this.fetchImages();
+      this.onSearch();
     }
   }
 
@@ -118,7 +148,6 @@ export default class ImageGallery extends React.Component {
     }
 
     if (this.state.status === 'error') {
-      toast('error');
       return (
         <ul className={css.ImageGallery}>
           {this.state.images.map(image => (
@@ -148,7 +177,7 @@ export default class ImageGallery extends React.Component {
               />
             ))}
           </ul>
-          <Button onFech={this.fetchImages} />
+          <Button onLoadMore={this.onSearch} />
         </>
       );
     }

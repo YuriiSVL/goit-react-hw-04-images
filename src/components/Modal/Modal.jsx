@@ -1,10 +1,16 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 import css from 'components/Modal/Modal.module.css';
 
 const modalRoot = document.querySelector('#modal-root');
 
 export default class Modal extends React.Component {
+  static propTypes = {
+    onClose: PropTypes.func,
+    url: PropTypes.string,
+  };
+
   state = {};
 
   componentDidMount() {

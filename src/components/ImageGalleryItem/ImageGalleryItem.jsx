@@ -1,4 +1,5 @@
 import css from 'components/ImageGalleryItem/ImageGalleryItem.module.css';
+import PropTypes from 'prop-types';
 
 const ImageGalleryItem = ({ url, largeUrl, tags, onSelect }) => {
   return (
@@ -6,6 +7,13 @@ const ImageGalleryItem = ({ url, largeUrl, tags, onSelect }) => {
       <img className={css['ImageGalleryItem-image']} src={url} alt={tags} />
     </li>
   );
+};
+
+ImageGalleryItem.propTypes = {
+  url: PropTypes.string,
+  largeUrl: PropTypes.string,
+  tags: PropTypes.string,
+  onSelect: PropTypes.func,
 };
 
 export default ImageGalleryItem;
