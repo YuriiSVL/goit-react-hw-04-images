@@ -11,7 +11,6 @@ export class App extends React.Component {
     searchQuery: '',
     showModal: false,
     selectedImage: null,
-    isOnSearch: false,
   };
 
   toggleModal = () => {

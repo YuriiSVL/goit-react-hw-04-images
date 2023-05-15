@@ -21,34 +21,42 @@ export default class ImageGallery extends React.Component {
     status: 'idle',
   };
 
-  // onLoadMore = async () => {
-  //   this.setState({ status: 'pending' });
-  //   try {
-  //     const images = await fetchImages(this.props.searchQuery, this.state.page);
-  //     this.setState(prevState => ({
-  //       images: [...prevState.images, ...images],
-  //       page: this.state.page + 1,
-  //     }));
+  onLoadMore = async () => {
+    this.setState({
+      status: 'pending',
+    });
 
-  //     this.setState({ status: 'resolved' });
-  //     if (images.length === 0) {
-  //       toast('Sorry, there is the end of collection');
-  //       this.setState({ status: 'idle' });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast(error.message);
-  //     this.setState({ status: 'error' });
-  //   }
-  // };
-
-  onSearch = async () => {
-    this.setState({ status: 'pending' });
     try {
-      const images = await fetchImages(this.props.searchQuery, this.state.page);
+      const images = await fetchImages(
+        this.props.searchQuery,
+        this.state.page + 1
+      );
       this.setState(prevState => ({
         images: [...prevState.images, ...images],
         page: this.state.page + 1,
+      }));
+
+      this.setState({ status: 'resolved' });
+      if (images.length === 0) {
+        toast('Sorry, it is the end of collection');
+        this.setState({ status: 'idle' });
+      }
+    } catch (error) {
+      console.log(error);
+      toast(error.message);
+      this.setState({ status: 'error' });
+    }
+  };
+
+  onSearch = async () => {
+    this.setState({
+      status: 'pending',
+      page: 1,
+    });
+    try {
+      const images = await fetchImages(this.props.searchQuery);
+      this.setState(prevState => ({
+        images: [...images],
       }));
 
       this.setState({ status: 'resolved' });
@@ -59,7 +67,10 @@ export default class ImageGallery extends React.Component {
           toast(
             'Sorry, there are no images matching your search query. Please try again.'
           );
-        this.setState({ status: 'idle' });
+        this.setState({
+          status: 'idle',
+          page: 1,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -68,37 +79,13 @@ export default class ImageGallery extends React.Component {
     }
   };
 
-  // fetchImages = () => {
-  //   this.setState({ loading: true });
-  //   fetch(
-  //     `https://pixabay.com/api/?q=${this.props.searchQuery}&page=${this.state.page}&key=34827531-46fe6f83c6cd16e6040b33d37&image_type=photo&orientation=horizontal&per_page=12`
-  //   )
-  //     .then(response => {
-  //       if (response.ok) {
-  //         return response.json();
-  //       }
-  //       return Promise.reject(new Error('404'));
-  //     })
-  //     .then(data => {
-  // if (data.hits.length === 0) {
-  //   alert(
-  //     'Sorry, there are no images matching your search query. Please try again.'
-  //   );
-  //         return;
-  //       }
-  //       this.setState(prevState => ({
-  //         images: [...prevState.images, ...data.hits],
-  //         page: this.state.page + 1,
-  //       }));
-  //     })
-  //     .catch(error => this.setState({ error }))
-  //     .finally(() => this.setState({ loading: false }));
-  // };
-
   componentDidUpdate(prevProps, prevState) {
     if (this.props.searchQuery !== prevProps.searchQuery) {
-      this.setState({ status: 'pending' });
-      this.setState({ images: [] });
+      this.setState({
+        status: 'pending',
+        images: [],
+        page: 1,
+      });
       this.onSearch();
     }
   }
@@ -177,7 +164,7 @@ export default class ImageGallery extends React.Component {
               />
             ))}
           </ul>
-          <Button onLoadMore={this.onSearch} />
+          <Button onLoadMore={this.onLoadMore} />
         </>
       );
     }
