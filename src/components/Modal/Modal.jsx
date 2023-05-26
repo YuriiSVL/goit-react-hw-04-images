@@ -1,46 +1,90 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import css from 'components/Modal/Modal.module.css';
 
 const modalRoot = document.querySelector('#modal-root');
 
-export default class Modal extends React.Component {
-  static propTypes = {
-    onClose: PropTypes.func,
-    url: PropTypes.string,
-  };
+const Modal = ({ onClose, url }) => {
+  useEffect(() => {
+    const handleKeyDown = e => {
+      if (e.code === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
 
-  state = {};
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-  }
+  // const handleKeyDown = e => {
+  //   if (e.code === 'Escape') {
+  //     onClose();
+  //   }
+  // };
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      this.props.onClose();
-    }
-  };
-
-  handleBackdropClick = e => {
+  const handleBackdropClick = e => {
     if (e.target === e.currentTarget) {
-      this.props.onClose();
+      onClose();
     }
   };
 
-  render() {
-    return createPortal(
-      <div className={css.Overlay} onClick={this.handleBackdropClick}>
-        <div className={css.Modal}>
-          <img src={this.props.url} alt="" />
-        </div>
-      </div>,
-      modalRoot
-    );
-  }
-}
+  return createPortal(
+    <div className={css.Overlay} onClick={handleBackdropClick}>
+      <div className={css.Modal}>
+        <img src={url} alt="" />
+      </div>
+    </div>,
+    modalRoot
+  );
+};
+
+Modal.propTypes = {
+  onClose: PropTypes.func,
+  url: PropTypes.string,
+};
+
+export default Modal;
+
+// export default class Modal extends React.Component {
+//   static propTypes = {
+//     onClose: PropTypes.func,
+//     url: PropTypes.string,
+//   };
+
+//   state = {};
+
+//   componentDidMount() {
+//     window.addEventListener('keydown', this.handleKeyDown);
+//   }
+
+//   componentWillUnmount() {
+//     window.removeEventListener('keydown', this.handleKeyDown);
+//   }
+
+//   handleKeyDown = e => {
+//     if (e.code === 'Escape') {
+//       this.props.onClose();
+//     }
+//   };
+
+//   handleBackdropClick = e => {
+//     if (e.target === e.currentTarget) {
+//       this.props.onClose();
+//     }
+//   };
+
+//   render() {
+//     return createPortal(
+//       <div className={css.Overlay} onClick={this.handleBackdropClick}>
+//         <div className={css.Modal}>
+//           <img src={this.props.url} alt="" />
+//         </div>
+//       </div>,
+//       modalRoot
+//     );
+//   }
+// }
