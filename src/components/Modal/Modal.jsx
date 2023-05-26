@@ -20,12 +20,6 @@ const Modal = ({ onClose, url }) => {
     };
   }, [onClose]);
 
-  // const handleKeyDown = e => {
-  //   if (e.code === 'Escape') {
-  //     onClose();
-  //   }
-  // };
-
   const handleBackdropClick = e => {
     if (e.target === e.currentTarget) {
       onClose();
